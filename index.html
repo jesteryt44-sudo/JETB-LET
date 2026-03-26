@@ -57,12 +57,15 @@
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 90%; max-width: 450px; margin: 10vh auto; border-radius: 15px; padding: 30px; position: relative; box-shadow: var(--shadow-md); }
         
+        .city-list { max-height: 300px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .city-item { padding: 10px; background: #f8f9fa; border-radius: 5px; cursor: pointer; font-weight: 600; text-align: center; }
+        .city-item:hover { background: var(--primary-red); color: white; }
+
         /* --- SEPET SİDEBAR --- */
         .side-cart { position: fixed; right: -400px; top: 0; width: 350px; height: 100%; background: white; z-index: 6000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.15); padding: 25px; display: flex; flex-direction: column; }
         .side-cart.active { right: 0; }
         .cart-items { flex: 1; overflow-y: auto; margin-top: 20px; }
 
-        /* KOLTUKLAR */
         .seat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
         .seat { aspect-ratio: 1; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px; font-weight: 700; font-size: 13px; }
         .seat.selected { background: var(--success-green); color: white; border-color: var(--success-green); }
@@ -91,43 +94,41 @@
     <main id="homeSection" class="page-content active-section">
         <section class="hero-banner">
             <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">Türkiye'nin Her Yerine Ucuz Bilet</h1>
-            <p style="opacity: 0.9;">Güvenli ödeme ve anında bilet onayı ile yolculuğa hazır olun.</p>
+            <p style="opacity: 0.9;">20 farklı ilden binlerce sefer JetBilet'te!</p>
         </section>
 
         <div class="main-search-container">
             <div class="search-row">
-                <div class="input-box" onclick="changeCity('from')">
+                <div class="input-box" onclick="openCityModal('from')">
                     <label>NEREDEN</label><i class="fas fa-map-marker-alt"></i>
-                    <div class="input-field" id="fromDisp">İstanbul</div>
+                    <div class="input-field" id="fromDisp">Mersin</div>
                 </div>
-                <div class="input-box" onclick="changeCity('to')">
+                <div class="input-box" onclick="openCityModal('to')">
                     <label>NEREYE</label><i class="fas fa-location-arrow"></i>
-                    <div class="input-field" id="toDisp">Ankara</div>
+                    <div class="input-field" id="toDisp">İstanbul</div>
                 </div>
                 <div class="input-box">
                     <label>TARİH</label><i class="fas fa-calendar-alt"></i>
                     <input type="date" class="input-field" value="2026-03-27">
                 </div>
-                <button class="search-btn" onclick="alert('Seferler güncellendi!')">Bileti Bul</button>
+                <button class="search-btn" onclick="alert('Seferler listeleniyor...')">Bileti Bul</button>
             </div>
         </div>
 
         <section style="padding: 0 10%; max-width: 1200px; margin: 0 auto;">
-            <h2 style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-bolt" style="color: #f1c40f;"></i> Popüler Seferler
-            </h2>
+            <h2 style="margin-bottom: 25px;">Popüler Seferler</h2>
             <div id="trips">
-                <div class="trip-item" onclick="startBooking('Kamil Koç', 428, '18:00')">
+                <div class="trip-item" onclick="startBooking('Kamil Koç', 450, '12:00')">
                     <div class="comp-logo">Kamil Koç</div>
-                    <div><b style="font-size: 1.2rem;">18:00</b><br><small style="color: var(--text-gray);">İstanbul > Ankara</small></div>
-                    <div style="color: var(--success-green); font-weight: 700; font-size: 0.9rem;">2+1 Rahat Hat</div>
-                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">428 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px; margin-top:5px;">Seç</button></div>
+                    <div><b>12:00</b><br><small id="route1">Mersin > İstanbul</small></div>
+                    <div style="color: var(--success-green); font-weight: 700;">2+1 Rahat</div>
+                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">450 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px;">Seç</button></div>
                 </div>
-                <div class="trip-item" onclick="startBooking('Metro Turizm', 395, '20:30')">
+                <div class="trip-item" onclick="startBooking('Metro Turizm', 420, '15:30')">
                     <div class="comp-logo">Metro Turizm</div>
-                    <div><b style="font-size: 1.2rem;">20:30</b><br><small style="color: var(--text-gray);">İstanbul > Ankara</small></div>
-                    <div style="color: var(--success-green); font-weight: 700; font-size: 0.9rem;">Ekonomik Sefer</div>
-                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">395 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px; margin-top:5px;">Seç</button></div>
+                    <div><b>15:30</b><br><small id="route2">Mersin > İstanbul</small></div>
+                    <div style="color: var(--success-green); font-weight: 700;">Ekonomik</div>
+                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">420 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px;">Seç</button></div>
                 </div>
             </div>
         </section>
@@ -135,30 +136,35 @@
 
     <div id="aboutSection" class="page-content" style="padding: 60px 10%;">
         <div style="background:white; padding:40px; border-radius:20px; box-shadow: var(--shadow-sm); max-width: 800px; margin: 0 auto;">
-            <h2 style="color:var(--primary-red); margin-bottom:20px;">Biz Kimiz?</h2>
-            <p style="font-size: 1.1rem; color: #555;">JetBilet, 2026 yılında Mersin'de kurulan, Türkiye'nin en genç ve dinamik biletleme platformudur. Kullanıcılarımıza saniyeler içerisinde en uygun bileti sunmak için çalışıyoruz.</p>
+            <h2 style="color:var(--primary-red); margin-bottom:20px;">Hakkımızda</h2>
+            <p>JetBilet, Mersin Üniversitesi öğrencileri tarafından geliştirilen bir biletleme teknolojisidir.</p>
             <hr style="margin:30px 0; opacity:0.1;">
-            <h3 style="margin-bottom:15px;">İletişim Bilgileri</h3>
-            <p style="margin-bottom:10px;"><i class="fas fa-envelope" style="color:var(--primary-red); width:25px;"></i> destek@jetbilet.com</p>
-            <p style="margin-bottom:10px;"><i class="fas fa-phone" style="color:var(--primary-red); width:25px;"></i> 0324 123 45 67</p>
-            <p><i class="fas fa-map-marker-alt" style="color:var(--primary-red); width:25px;"></i> Mersin Üniversitesi Teknopark, Yenişehir</p>
+            <h3>İletişim</h3>
+            <p>E-posta: destek@jetbilet.com</p>
+            <p>Adres: Mersin Teknopark</p>
+        </div>
+    </div>
+
+    <div id="cityModal" class="overlay">
+        <div class="modal-content">
+            <h3 id="cityTitle">Şehir Seçin</h3>
+            <div class="city-list" id="cityContainer"></div>
+            <button onclick="closeModal('cityModal')" style="margin-top:20px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Kapat</button>
         </div>
     </div>
 
     <div id="loginModal" class="overlay">
         <div class="modal-content">
-            <h3 style="margin-bottom:20px;">Üye Girişi</h3>
-            <label style="font-size: 12px; font-weight: 700;">ADINIZ SOYADINIZ</label>
-            <input type="text" id="uName" class="input-field" placeholder="Örn: Ahmet Yılmaz" style="margin-bottom:15px; padding-left:15px;">
+            <h3>Üye Girişi</h3>
+            <input type="text" id="uName" class="input-field" placeholder="Adınız" style="margin-bottom:15px; padding-left:15px;">
             <button class="search-btn" onclick="login()">Giriş Yap</button>
-            <button onclick="closeModal('loginModal')" style="margin-top:15px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Vazgeç</button>
+            <button onclick="closeModal('loginModal')" style="margin-top:10px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Kapat</button>
         </div>
     </div>
 
     <div id="seatModal" class="overlay">
         <div class="modal-content">
             <h3 id="stitle">Koltuk Seçimi</h3>
-            <p id="sinfo" style="font-size:12px; color:gray;"></p>
             <div class="seat-grid" id="sgrid"></div>
             <button class="search-btn" style="margin-top:25px;" onclick="confirmSeat()">Sepete Ekle</button>
             <button onclick="closeModal('seatModal')" style="margin-top:10px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Kapat</button>
@@ -167,61 +173,63 @@
 
     <div id="ticketsModal" class="overlay">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px;">Biletlerim</h3>
-            <div id="ticketArea" style="max-height:300px; overflow-y:auto;">Henüz biletiniz bulunmuyor.</div>
+            <h3>Biletlerim</h3>
+            <div id="ticketArea">Henüz biletiniz bulunmuyor.</div>
             <button class="search-btn" onclick="closeModal('ticketsModal')" style="margin-top:20px;">Kapat</button>
         </div>
     </div>
 
     <div id="cartBar" class="side-cart">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:15px;">
-            <h3>Ödeme Ekranı</h3>
-            <i class="fas fa-times" onclick="closeCart()" style="cursor:pointer; font-size:1.2rem;"></i>
-        </div>
+        <h3>Ödeme Ekranı</h3>
         <div id="cartItems" class="cart-items"></div>
         <div style="padding-top:20px; border-top:1px solid #eee;">
             <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.3rem; margin-bottom:20px;">
-                <span>Toplam:</span><span id="cTotal" style="color:var(--primary-red);">0 TL</span>
+                <span>Toplam:</span><span id="cTotal">0 TL</span>
             </div>
-            <button class="search-btn" onclick="completePayment()" style="height:60px; font-size:1.1rem;">ÖDEMEYİ TAMAMLA</button>
+            <button class="search-btn" onclick="completePayment()">ÖDEMEYİ TAMAMLA</button>
         </div>
     </div>
 
     <script>
-        let app = { user: null, cart: [], myTickets: [], tempTrip: null, tempSeat: null };
+        const iller = ["Adana", "Ankara", "Antalya", "Aydın", "Bursa", "Denizli", "Diyarbakır", "Erzurum", "Eskişehir", "Gaziantep", "İstanbul", "İzmir", "Kayseri", "Kocaeli", "Konya", "Malatya", "Mersin", "Samsun", "Trabzon", "Şanlıurfa"];
+        let app = { user: null, cart: [], myTickets: [], tempTrip: null, tempSeat: null, cityTarget: '' };
 
-        // Sayfa Değiştirici
         function showSection(id) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-section'));
             document.getElementById(id).classList.add('active-section');
-            closeCart();
+            document.getElementById('cartBar').classList.remove('active');
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'block'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function closeCart() { document.getElementById('cartBar').classList.remove('active'); }
 
-        // Şehir Değiştirme
-        function changeCity(type) {
-            const val = prompt("Şehir giriniz:");
-            if(val) document.getElementById(type + 'Disp').innerText = val;
+        // Şehir Modalı Açma
+        function openCityModal(target) {
+            app.cityTarget = target;
+            document.getElementById('cityTitle').innerText = target === 'from' ? "Nereden?" : "Nereye?";
+            const container = document.getElementById('cityContainer');
+            container.innerHTML = iller.map(il => `<div class="city-item" onclick="selectCity('${il}')">${il}</div>`).join('');
+            openModal('cityModal');
         }
 
-        // Giriş İşlemi
+        function selectCity(city) {
+            document.getElementById(app.cityTarget + 'Disp').innerText = city;
+            const route1 = document.getElementById('fromDisp').innerText + " > " + document.getElementById('toDisp').innerText;
+            document.getElementById('route1').innerText = route1;
+            document.getElementById('route2').innerText = route1;
+            closeModal('cityModal');
+        }
+
         function login() {
             const n = document.getElementById('uName').value;
-            if(!n) return alert("Lütfen adınızı girin.");
+            if(!n) return;
             app.user = n;
-            document.getElementById('userBtn').innerHTML = `<i class="fas fa-user-check"></i> Merhaba, <b>${n}</b>`;
+            document.getElementById('userBtn').innerHTML = `Hoş geldin, <b>${n}</b>`;
             closeModal('loginModal');
         }
 
-        // Biletleme Akışı
         function startBooking(comp, price, time) {
             app.tempTrip = { comp, price, time, from: document.getElementById('fromDisp').innerText, to: document.getElementById('toDisp').innerText };
-            document.getElementById('stitle').innerText = comp + " - Koltuk Seçimi";
-            document.getElementById('sinfo').innerText = app.tempTrip.from + " > " + app.tempTrip.to + " | " + time;
-            
             const grid = document.getElementById('sgrid');
             grid.innerHTML = '';
             for(let i=1; i<=24; i++) {
@@ -238,7 +246,7 @@
         }
 
         function confirmSeat() {
-            if(!app.tempSeat) return alert("Lütfen bir koltuk seçiniz!");
+            if(!app.tempSeat) return alert("Koltuk seçin!");
             app.cart.push({ ...app.tempTrip, seat: app.tempSeat });
             renderCart();
             closeModal('seatModal');
@@ -248,14 +256,9 @@
         function renderCart() {
             const area = document.getElementById('cartItems');
             let total = 0;
-            area.innerHTML = app.cart.map((item, idx) => {
+            area.innerHTML = app.cart.map(item => {
                 total += item.price;
-                return `
-                    <div style="background:#fcfcfc; padding:15px; border-radius:10px; border:1px solid #eee; margin-bottom:10px;">
-                        <b style="color:var(--primary-red)">${item.comp}</b><br>
-                        <small>${item.from} > ${item.to}</small><br>
-                        <b>Koltuk: ${item.seat}</b> - ${item.price} TL
-                    </div>`;
+                return `<div style="padding:10px; border-bottom:1px solid #eee;"><b>${item.comp}</b><br>Koltuk: ${item.seat} | ${item.price} TL</div>`;
             }).join('');
             document.getElementById('cTotal').innerText = total + " TL";
         }
@@ -265,20 +268,14 @@
             app.myTickets.push(...app.cart);
             app.cart = [];
             renderCart();
-            closeCart();
-            alert("Ödeme başarılı! Biletiniz hazır.");
+            document.getElementById('cartBar').classList.remove('active');
+            alert("Biletiniz Seyahatlerim kısmına eklendi.");
             updateTicketList();
         }
 
         function updateTicketList() {
             const area = document.getElementById('ticketArea');
-            area.innerHTML = app.myTickets.map(t => `
-                <div style="padding:15px; border-bottom:1px dashed #ccc; margin-bottom:10px;">
-                    <span style="font-size:10px; color:gray;">PNR: JET${Math.floor(Math.random()*99999)}</span><br>
-                    <b>${t.comp}</b> | ${t.from} > ${t.to}<br>
-                    Koltuk: ${t.seat} | Saat: ${t.time}
-                </div>
-            `).join('');
+            area.innerHTML = app.myTickets.map(t => `<div style="padding:10px; border-bottom:1px solid #ddd;"><b>${t.comp}</b><br>${t.from} > ${t.to} (Koltuk: ${t.seat})</div>`).join('');
         }
     </script>
 </body>
