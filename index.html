@@ -16,7 +16,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; }
+        body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
         /* --- HEADER --- */
         header {
@@ -33,126 +33,252 @@
         .nav-menu li a { text-decoration: none; color: var(--dark-blue); font-weight: 600; cursor: pointer; transition: 0.3s; }
         .nav-menu li a:hover { color: var(--primary-red); }
 
-        /* --- SECTIONS --- */
-        .page-section { display: none; padding-bottom: 50px; }
-        .active-section { display: block; }
+        /* --- SAYFA YAPISI --- */
+        .page-content { display: none; }
+        .active-section { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- HERO & SEARCH (HOME) --- */
+        /* --- HERO & SEARCH --- */
         .hero-banner { background: var(--dark-blue); padding: 60px 10% 120px; text-align: center; color: white; }
         .main-search-container { max-width: 1000px; margin: -80px auto 40px; background: var(--white); border-radius: 12px; box-shadow: var(--shadow-md); padding: 30px; }
         .search-row { display: grid; grid-template-columns: 1fr 1fr 1fr 180px; gap: 20px; align-items: end; }
         .input-box { position: relative; }
-        .input-field { width: 100%; border: 1px solid var(--border-color); padding: 14px 15px 14px 45px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .input-box label { display: block; font-size: 11px; font-weight: 800; color: var(--text-gray); margin-bottom: 8px; text-transform: uppercase; }
+        .input-field { width: 100%; border: 1px solid var(--border-color); padding: 14px 15px 14px 45px; border-radius: 8px; font-weight: 600; cursor: pointer; background: #fff; }
         .input-box i { position: absolute; left: 15px; bottom: 17px; color: var(--primary-red); }
         .search-btn { background: var(--success-green); color: white; border: none; height: 52px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
 
-        /* --- KURUMSAL SAYFA --- */
-        .about-container { padding: 40px 10%; max-width: 1200px; margin: 0 auto; }
-        .info-card { background: white; padding: 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
-        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        /* --- TRIP LIST --- */
-        .trip-item { background: var(--white); border: 1px solid var(--border-color); border-radius: 10px; display: grid; grid-template-columns: 180px 1fr 1fr 150px; align-items: center; padding: 20px; margin-bottom: 15px; }
+        /* --- SEFER LİSTESİ --- */
+        .trip-item { background: var(--white); border: 1px solid var(--border-color); border-radius: 10px; display: grid; grid-template-columns: 180px 1fr 1fr 150px; align-items: center; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; }
+        .trip-item:hover { border-color: var(--primary-red); transform: translateY(-2px); }
         .comp-logo { font-weight: 800; border-left: 4px solid var(--primary-red); padding-left: 10px; }
 
-        /* --- FOOTER --- */
-        footer { background: var(--dark-blue); color: white; padding: 40px 10%; text-align: center; margin-top: 50px; }
+        /* --- MODALLAR --- */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 90%; max-width: 450px; margin: 10vh auto; border-radius: 15px; padding: 30px; position: relative; box-shadow: var(--shadow-md); }
+        
+        /* --- SEPET SİDEBAR --- */
+        .side-cart { position: fixed; right: -400px; top: 0; width: 350px; height: 100%; background: white; z-index: 6000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.15); padding: 25px; display: flex; flex-direction: column; }
+        .side-cart.active { right: 0; }
+        .cart-items { flex: 1; overflow-y: auto; margin-top: 20px; }
+
+        /* KOLTUKLAR */
+        .seat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .seat { aspect-ratio: 1; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px; font-weight: 700; font-size: 13px; }
+        .seat.selected { background: var(--success-green); color: white; border-color: var(--success-green); }
+        .seat.taken { background: #f0f0f0; color: #ccc; cursor: not-allowed; border: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-area" onclick="showPage('home')">
+        <div class="logo-area" onclick="showSection('homeSection')">
             <i class="fas fa-bus-alt"></i>
             <span>JET<b>BILET</b></span>
         </div>
         <nav>
             <ul class="nav-menu">
-                <li><a onclick="showPage('home')">Bilet Ara</a></li>
-                <li><a onclick="showPage('about')">Hakkımızda & İletişim</a></li>
-                <li><a onclick="alert('Seyahatlerim modülü yükleniyor...')">Seyahatlerim</a></li>
+                <li><a onclick="showSection('homeSection')">Bilet Ara</a></li>
+                <li><a onclick="showSection('aboutSection')">Hakkımızda & İletişim</a></li>
+                <li><a onclick="openModal('ticketsModal')">Seyahatlerim</a></li>
             </ul>
         </nav>
-        <div style="font-weight: 700; color: var(--primary-red); cursor: pointer;">Üye Girişi</div>
+        <div id="userBtn" style="font-weight: 700; color: var(--primary-red); cursor: pointer; background: #fff5f5; padding: 8px 15px; border-radius: 20px;" onclick="openModal('loginModal')">
+            <i class="fas fa-user-circle"></i> Üye Girişi
+        </div>
     </header>
 
-    <main id="home" class="page-section active-section">
+    <main id="homeSection" class="page-content active-section">
         <section class="hero-banner">
-            <h1>Türkiye'nin Her Yerine Ucuz Bilet</h1>
-            <p>Hızlı, Güvenli ve Kolay bilet almanın adresi.</p>
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">Türkiye'nin Her Yerine Ucuz Bilet</h1>
+            <p style="opacity: 0.9;">Güvenli ödeme ve anında bilet onayı ile yolculuğa hazır olun.</p>
         </section>
 
         <div class="main-search-container">
             <div class="search-row">
-                <div class="input-box">
-                    <label style="font-size: 12px; font-weight: 700; color: var(--text-gray);">NEREDEN</label>
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div class="input-field">İstanbul</div>
+                <div class="input-box" onclick="changeCity('from')">
+                    <label>NEREDEN</label><i class="fas fa-map-marker-alt"></i>
+                    <div class="input-field" id="fromDisp">İstanbul</div>
+                </div>
+                <div class="input-box" onclick="changeCity('to')">
+                    <label>NEREYE</label><i class="fas fa-location-arrow"></i>
+                    <div class="input-field" id="toDisp">Ankara</div>
                 </div>
                 <div class="input-box">
-                    <label style="font-size: 12px; font-weight: 700; color: var(--text-gray);">NEREYE</label>
-                    <i class="fas fa-location-arrow"></i>
-                    <div class="input-field">Ankara</div>
-                </div>
-                <div class="input-box">
-                    <label style="font-size: 12px; font-weight: 700; color: var(--text-gray);">TARİH</label>
-                    <i class="fas fa-calendar-alt"></i>
+                    <label>TARİH</label><i class="fas fa-calendar-alt"></i>
                     <input type="date" class="input-field" value="2026-03-27">
                 </div>
-                <button class="search-btn">Bileti Bul</button>
+                <button class="search-btn" onclick="alert('Seferler güncellendi!')">Bileti Bul</button>
             </div>
         </div>
 
-        <section style="padding: 0 10%;">
-            <h2 style="margin-bottom: 20px;">Popüler Seferler</h2>
-            <div id="tripList">
-                <div class="trip-item">
+        <section style="padding: 0 10%; max-width: 1200px; margin: 0 auto;">
+            <h2 style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-bolt" style="color: #f1c40f;"></i> Popüler Seferler
+            </h2>
+            <div id="trips">
+                <div class="trip-item" onclick="startBooking('Kamil Koç', 428, '18:00')">
                     <div class="comp-logo">Kamil Koç</div>
-                    <div><b>18:00</b><br><small>İstanbul > Ankara</small></div>
-                    <div style="color: var(--success-green); font-weight: 700;">2+1 Konfor</div>
-                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.2rem;">428 TL</b><br><button class="search-btn" style="height: 35px; width: 80px; font-size: 0.8rem;">Seç</button></div>
+                    <div><b style="font-size: 1.2rem;">18:00</b><br><small style="color: var(--text-gray);">İstanbul > Ankara</small></div>
+                    <div style="color: var(--success-green); font-weight: 700; font-size: 0.9rem;">2+1 Rahat Hat</div>
+                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">428 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px; margin-top:5px;">Seç</button></div>
+                </div>
+                <div class="trip-item" onclick="startBooking('Metro Turizm', 395, '20:30')">
+                    <div class="comp-logo">Metro Turizm</div>
+                    <div><b style="font-size: 1.2rem;">20:30</b><br><small style="color: var(--text-gray);">İstanbul > Ankara</small></div>
+                    <div style="color: var(--success-green); font-weight: 700; font-size: 0.9rem;">Ekonomik Sefer</div>
+                    <div style="text-align: right;"><b style="color: var(--primary-red); font-size: 1.4rem;">395 TL</b><br><button class="search-btn" style="height:32px; width:80px; font-size:12px; margin-top:5px;">Seç</button></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <main id="about" class="page-section">
-        <div class="about-container">
-            <div class="info-card">
-                <h2 style="color: var(--primary-red); margin-bottom: 15px;"><i class="fas fa-info-circle"></i> Hakkımızda</h2>
-                <p><b>JetBilet</b>, 2026 yılında Mersin'de kurulmuş, Türkiye'nin en hızlı bilet satış platformudur. 200'den fazla otobüs firmasıyla olan iş ortaklığımız sayesinde size en uygun fiyatı saniyeler içinde sunuyoruz.</p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="info-card">
-                    <h3 style="margin-bottom: 15px;"><i class="fas fa-headset"></i> İletişim</h3>
-                    <p><i class="fas fa-envelope"></i> destek@jetbilet.com</p>
-                    <p><i class="fas fa-phone"></i> 0324 123 45 67</p>
-                </div>
-                <div class="info-card" style="background: var(--dark-blue); color: white;">
-                    <h3 style="margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> Merkez Ofis</h3>
-                    <p>Mersin Üniversitesi Çiftlikköy Kampüsü<br>Teknopark No: 12, Yenişehir/Mersin</p>
-                </div>
-            </div>
+    <div id="aboutSection" class="page-content" style="padding: 60px 10%;">
+        <div style="background:white; padding:40px; border-radius:20px; box-shadow: var(--shadow-sm); max-width: 800px; margin: 0 auto;">
+            <h2 style="color:var(--primary-red); margin-bottom:20px;">Biz Kimiz?</h2>
+            <p style="font-size: 1.1rem; color: #555;">JetBilet, 2026 yılında Mersin'de kurulan, Türkiye'nin en genç ve dinamik biletleme platformudur. Kullanıcılarımıza saniyeler içerisinde en uygun bileti sunmak için çalışıyoruz.</p>
+            <hr style="margin:30px 0; opacity:0.1;">
+            <h3 style="margin-bottom:15px;">İletişim Bilgileri</h3>
+            <p style="margin-bottom:10px;"><i class="fas fa-envelope" style="color:var(--primary-red); width:25px;"></i> destek@jetbilet.com</p>
+            <p style="margin-bottom:10px;"><i class="fas fa-phone" style="color:var(--primary-red); width:25px;"></i> 0324 123 45 67</p>
+            <p><i class="fas fa-map-marker-alt" style="color:var(--primary-red); width:25px;"></i> Mersin Üniversitesi Teknopark, Yenişehir</p>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        <p>&copy; 2026 JetBilet Biletleme Sistemi. Tüm hakları saklıdır.</p>
-    </footer>
+    <div id="loginModal" class="overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom:20px;">Üye Girişi</h3>
+            <label style="font-size: 12px; font-weight: 700;">ADINIZ SOYADINIZ</label>
+            <input type="text" id="uName" class="input-field" placeholder="Örn: Ahmet Yılmaz" style="margin-bottom:15px; padding-left:15px;">
+            <button class="search-btn" onclick="login()">Giriş Yap</button>
+            <button onclick="closeModal('loginModal')" style="margin-top:15px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Vazgeç</button>
+        </div>
+    </div>
+
+    <div id="seatModal" class="overlay">
+        <div class="modal-content">
+            <h3 id="stitle">Koltuk Seçimi</h3>
+            <p id="sinfo" style="font-size:12px; color:gray;"></p>
+            <div class="seat-grid" id="sgrid"></div>
+            <button class="search-btn" style="margin-top:25px;" onclick="confirmSeat()">Sepete Ekle</button>
+            <button onclick="closeModal('seatModal')" style="margin-top:10px; background:none; border:none; color:gray; cursor:pointer; width:100%;">Kapat</button>
+        </div>
+    </div>
+
+    <div id="ticketsModal" class="overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px;">Biletlerim</h3>
+            <div id="ticketArea" style="max-height:300px; overflow-y:auto;">Henüz biletiniz bulunmuyor.</div>
+            <button class="search-btn" onclick="closeModal('ticketsModal')" style="margin-top:20px;">Kapat</button>
+        </div>
+    </div>
+
+    <div id="cartBar" class="side-cart">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:15px;">
+            <h3>Ödeme Ekranı</h3>
+            <i class="fas fa-times" onclick="closeCart()" style="cursor:pointer; font-size:1.2rem;"></i>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div style="padding-top:20px; border-top:1px solid #eee;">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.3rem; margin-bottom:20px;">
+                <span>Toplam:</span><span id="cTotal" style="color:var(--primary-red);">0 TL</span>
+            </div>
+            <button class="search-btn" onclick="completePayment()" style="height:60px; font-size:1.1rem;">ÖDEMEYİ TAMAMLA</button>
+        </div>
+    </div>
 
     <script>
-        // Sayfa Değiştirme Fonksiyonu (SPA Mantığı)
-        function showPage(pageId) {
-            // Tüm bölümleri gizle
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(section => section.classList.remove('active-section'));
+        let app = { user: null, cart: [], myTickets: [], tempTrip: null, tempSeat: null };
+
+        // Sayfa Değiştirici
+        function showSection(id) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            closeCart();
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function closeCart() { document.getElementById('cartBar').classList.remove('active'); }
+
+        // Şehir Değiştirme
+        function changeCity(type) {
+            const val = prompt("Şehir giriniz:");
+            if(val) document.getElementById(type + 'Disp').innerText = val;
+        }
+
+        // Giriş İşlemi
+        function login() {
+            const n = document.getElementById('uName').value;
+            if(!n) return alert("Lütfen adınızı girin.");
+            app.user = n;
+            document.getElementById('userBtn').innerHTML = `<i class="fas fa-user-check"></i> Merhaba, <b>${n}</b>`;
+            closeModal('loginModal');
+        }
+
+        // Biletleme Akışı
+        function startBooking(comp, price, time) {
+            app.tempTrip = { comp, price, time, from: document.getElementById('fromDisp').innerText, to: document.getElementById('toDisp').innerText };
+            document.getElementById('stitle').innerText = comp + " - Koltuk Seçimi";
+            document.getElementById('sinfo').innerText = app.tempTrip.from + " > " + app.tempTrip.to + " | " + time;
             
-            // Seçilen bölümü göster
-            document.getElementById(pageId).classList.add('active-section');
-            
-            // Sayfayı yukarı kaydır
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            const grid = document.getElementById('sgrid');
+            grid.innerHTML = '';
+            for(let i=1; i<=24; i++) {
+                const s = document.createElement('div');
+                s.className = 'seat'; s.innerText = i;
+                if(Math.random() < 0.2) s.classList.add('taken');
+                else s.onclick = () => {
+                    document.querySelectorAll('.seat').forEach(x => x.classList.remove('selected'));
+                    s.classList.add('selected'); app.tempSeat = i;
+                };
+                grid.appendChild(s);
+            }
+            openModal('seatModal');
+        }
+
+        function confirmSeat() {
+            if(!app.tempSeat) return alert("Lütfen bir koltuk seçiniz!");
+            app.cart.push({ ...app.tempTrip, seat: app.tempSeat });
+            renderCart();
+            closeModal('seatModal');
+            document.getElementById('cartBar').classList.add('active');
+        }
+
+        function renderCart() {
+            const area = document.getElementById('cartItems');
+            let total = 0;
+            area.innerHTML = app.cart.map((item, idx) => {
+                total += item.price;
+                return `
+                    <div style="background:#fcfcfc; padding:15px; border-radius:10px; border:1px solid #eee; margin-bottom:10px;">
+                        <b style="color:var(--primary-red)">${item.comp}</b><br>
+                        <small>${item.from} > ${item.to}</small><br>
+                        <b>Koltuk: ${item.seat}</b> - ${item.price} TL
+                    </div>`;
+            }).join('');
+            document.getElementById('cTotal').innerText = total + " TL";
+        }
+
+        function completePayment() {
+            if(app.cart.length === 0) return;
+            app.myTickets.push(...app.cart);
+            app.cart = [];
+            renderCart();
+            closeCart();
+            alert("Ödeme başarılı! Biletiniz hazır.");
+            updateTicketList();
+        }
+
+        function updateTicketList() {
+            const area = document.getElementById('ticketArea');
+            area.innerHTML = app.myTickets.map(t => `
+                <div style="padding:15px; border-bottom:1px dashed #ccc; margin-bottom:10px;">
+                    <span style="font-size:10px; color:gray;">PNR: JET${Math.floor(Math.random()*99999)}</span><br>
+                    <b>${t.comp}</b> | ${t.from} > ${t.to}<br>
+                    Koltuk: ${t.seat} | Saat: ${t.time}
+                </div>
+            `).join('');
         }
     </script>
 </body>
