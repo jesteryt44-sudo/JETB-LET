@@ -9,6 +9,39 @@
     
     <style>
         :root {
+            /* Mevcut style bloğunun içine ekle */
+:root {
+    /* ... eski değişkenlerin ... */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Yumuşak Kaydırma */
+html { scroll-behavior: smooth; }
+
+/* Buton ve Kartlar için Modern Efektler */
+.search-btn, .trip-item, .cart-trigger, .nav-menu li a {
+    transition: var(--transition);
+}
+
+.trip-item:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Skleton Loading Efekti için animasyon (Opsiyonel) */
+@keyframes shimmer {
+    0% { background-position: -468px 0; }
+    100% { background-position: 468px 0; }
+}
+
+/* Karanlık Mod Hazırlığı */
+body.dark-mode {
+    --bg-light: #0f172a;
+    --white: #1e293b;
+    --text-main: #f1f5f9;
+    --text-gray: #94a3b8;
+    --border-color: #334155;
+}
             --primary-red: #d92328; --dark-blue: #1c2b39; --bg-light: #f3f6f9;
             --white: #ffffff; --text-main: #333333; --text-gray: #707070;
             --border-color: #e4e9f0; --accent-blue: #2563eb; --success-green: #27ae60;
@@ -253,7 +286,19 @@
     <div id="cityModal" class="overlay"><div class="modal-content" style="max-width:400px;"><div class="modal-header"><h3>Şehir Seçin</h3><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('cityModal')"></i></div><div id="cityListArea" style="padding:10px; max-height:400px; overflow-y:auto;"></div></div></div>
 
     <script>
-        
+       // Karanlık Modu Aç/Kapat
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// Sayfa yüklendiğinde tercihi kontrol et
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+}); 
 document.addEventListener("DOMContentLoaded", function(){
   const payment = document.getElementById("paymentType");
   if(!payment) return;
